@@ -1,0 +1,192 @@
+---
+title       : Barcode visualizations using R
+subtitle    : Coloring ATCG-sequences in knitr/slidify reports
+author      : Markus Skyttner
+job         : 
+framework   : io2012     # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+---
+
+## Reference samples  
+Samples kept at the Swedish Museum for Natural History of the [European Roller](http://naturarv.se/?param=dnakey&catalogNumber=20106015) using Cat. id. NRM 20106015 - depicted in the figure to the left - and the [Eurasian Woodcock] (http://naturarv.se/?param=dnakey&catalogNumber=20046331) using Cat. id. NRM  20046331 - the figure to the right - from which some DNA data has been sequenced. 
+
+
+European Roller | Eurasian Woodcock  
+------------- | -------------  
+![alt text][id1] | ![alt text][id2]  
+**This European Roller flew astray, it is from Ramsberg, north of Lindesberg.** | **This Eurasian Woodcock originates from the Fiby lake outside Uppsala.**
+
+[id1]: ../blue-bird-small.png "Reference sample of European Roller"
+[id2]: ../brown-bird-small.png "Reference sample of European Woodcock"
+
+---
+
+## The data behind a DNA barcode visualization
+
+```{r, message=FALSE, echo=FALSE}
+
+primo <- "CTAATTTTTGGGGCCTGAGCGGGCATGGTTGGAACCGCCCTCAGCCTGCTCATTCGCGCAGAACTCGGTCAACCAGGAACCCTACTAGGAGACGACCAGATCTACAACGTAATCGTCACTGCCCATGCCTTCGTA
+ATAATCTTCTTTATAGTCATACCAATCATAATCGGGGGCTTTGGAAACTGACTAGTCCCCCTTATAATCGGCGCCCCAGACATAGCGTTCCCCCGTATAAATAACATAAGCTTCTGACTACTCCCCCCATCCTTCCTT
+CTCCTACTAGCCTCCTCCACCGTAGAAGCTGGTGCTGGTACAGGGTGAACAGTCTACCCCCCTCTAGCTGGTAATCTGGCCCACGCCGGAGCTTCTGTAGACCTAGCCATCTTCTCCCTACACCTCGCTGGAGTCT
+CATCAATCCTAGGTGCAATCAACTTCATCACTACTGCCATTAACATAAAGCCCCCGGCCCTATCTCAATACCAAACCCCCCTATTCGTATGATCCGTACTAATCACAGCCGTCCTACTATTACTTTCACTGCCCGTCCT
+CGCTGCCGGCATTACAATGCTCCTCACAGACCGAAACCTAAACACCACATTCTTTGACCCAGCCGGAGGAGGAGACCCAGTCCTATACCAACACCTATTC"
+
+secundo <- "CTAATCTTCGGTGCATGAGCTGGCATGGTCGGAACCGCCCTCAGCCTGCTTATTCGTGCAGAACTAGGCCAACCAGGAACCCTCTTGGGAGATGACCAAATCTACAATGTAATCGTTACTGCTCATGCATTCGTAA
+TAATTTTCTTCATAGTTATACCAATCATGATCGGAGGATTTGGAAATTGACTAGTCCCACTCATAATCGGCGCCCCCGACATAGCATTTCCTCGTATAAACAATATAAGCTTCTGACTACTCCCCCCATCATTCCTAT
+TATTACTAGCATCCTCTACAGTAGAAGCTGGAGCTGGCACAGGATGAACAGTATATCCACCCCTCGCCGGCAACCTAGCCCACGCAGGAGCCTCAGTAGACCTAGCTATTTTCTCCCTCCATTTAGCAGGTGTCTC
+CTCCATCCTAGGTGCCATTAACTTTATCACCACTGCCATTAACATAAAACCACCAGCCCTGTCCCAATACCAAACACCCCTATTTGTATGATCAGTACTCATTACCGCCGTCTTACTGCTACTCTCACTCCCAGTCCTT
+GCTGCCGGCATCACCATGCTATTAACAGATCGTAATCTAAACACCACATTCTTTGACCCAGCCGGAGGAGGAGACCCAGTCCTATACCAACATCTCTTC"
+
+primo <- actg_unwrap(primo)
+secundo <- actg_unwrap(secundo)
+
+primo_63w <- actg_wrap(primo, 63)
+secundo_63w <- actg_wrap(secundo, 63)
+
+primo_3k <- actg_k3(primo)
+secundo_3k <- actg_k3(secundo)
+
+primo_12k <- actg_k3(primo, invert = TRUE)
+secundo_12k <-actg_k3(secundo, invert = TRUE)
+
+```
+
+DNA sequence data from a European Roller can be expressed like this in text format:
+```
+`r primo_63w`
+```
+  
+The problem with this presentation format is that humans are very slow at processing this type of data - we use sequential processing which heavily taxes our working memory, when we could use **pre-attentive processing** to speed up our understanding of this abstract data.
+
+---
+## Traditional barcode visualization
+Traditionally, DNA sequenced data is therefore displayed in a colorful format using thin bars of four different colors representing the A, C, T and G symbols in the DNA sequence data. That way, an illusive similarity with product barcodes is constructed. 
+
+Such a classic traditional barcode depiction looks like this for these two sample sequences:
+
+```{r fig.width = 12, fig.height = 1, echo = FALSE}
+
+barcode(primo)  
+
+barcode(secundo)
+```
+
+This presentation format can compress a lot of data into one line, provided there are enough pixels available. However, it sacrifices clear display of individual symbols, because bars are so thin that they can barely be distinguished. And what happens when the sequence length is greater than available pixel width?
+
+Can you think of alternative ways to display the same data that fixes some of the problems above?
+
+---
+<pre style="font-family: monospace;">
+`r color_sequence(tolower(primo_63w))`
+</pre>
+
+`r color_sequence("a")` (red) = A  
+`r color_sequence("c")` (blue) = C  
+`r color_sequence("t")` (green) = T  
+`r color_sequence("g")` (yellow) = G  
+`r color_sequence("n")` (unknown) = N  
+
+---
+
+## Looking at 3rd position symbols only
+This is a classic barcode illustration over symbols in the 3rd position only. It so happens that a lot of differences between sequences happen in this 3rd position. 
+
+The illustration below emphasizes the big picture overview but it makes it hard to spot exactly where indvidual differences occur: 
+
+```{r fig.width = 12, fig.height = 1, echo = FALSE}
+
+barcode(primo_3k)  
+barcode(secundo_3k)  
+
+```
+
+---
+### European Roller:  
+
+<pre style="font-family: monospace;">
+`r color_sequence(actg_wrap((primo_3k), 63))`
+</pre>
+
+### Eurasian woodcock:
+
+<pre style="font-family: monospace;">
+`r color_sequence(actg_wrap((secundo_3k), 63))`
+</pre>
+
+`r color_sequence("A")` (red) = A  
+`r color_sequence("C")` (blue) = C  
+`r color_sequence("T")` (green) = T  
+`r color_sequence("G")` (yellow) = G  
+
+As you can see, when we use a multi-line display it is hard to spot the differences because positions are still not easily aligned so comparisons become slow and cognitively difficult to make. How can we support that task in a better way?  
+
+---
+## Using a pairwise multi-line row-wrapped display
+Light gray markings are used to accentuate pairwise differences pre-attentively:  
+<pre style="font-family: monospace;">
+`r color_sequence(actg_diff(primo_3k, secundo_3k, muting = FALSE))`
+</pre>
+
+With this technique no heavy cognitive hit is required to spot where the differences occur.
+
+---
+## Non-position-3-symbols  
+Shown in the traditional way:  
+
+```{r fig.width = 12, fig.height = 1, echo = FALSE} 
+barcode(primo_12k)  
+barcode(secundo_12k)  
+```
+
+In this display we see that the barcodes are quite similar. 
+
+Maybe we even wonder if there are any differences at all there? But we cannot say, or can we?
+
+As a side remark on colors: Colors used for the traditional barcode display are not well chosen. It is better to use perceptually friendly colors - and to avoid "RGB corners". Look at Color Brewer [http://www.colorbrewer2.org] for guidance!
+
+---
+## Non-position-3 data  
+Displayed as separate color-coded row-wrapped multi-line paragraphs
+<pre style="font-family: monospace;">
+`r color_sequence(actg_wrap(primo_12k, 63))`
+</pre>
+<pre style="font-family: monospace;">
+`r color_sequence(actg_wrap(secundo_12k, 63))`
+</pre>
+
+Still quite impossible to see whether there are any differences, right?
+
+---
+<pre style="font-family: monospace;">
+`r color_sequence(actg_diff(primo_12k, secundo_12k, 90))`
+</pre>
+
+Now we can see where the differences are!
+
+---
+## Pos3data - to mute similarities or differences?
+<pre style="font-family: monospace;">
+`r color_sequence(actg_diff(primo_3k, secundo_3k, muting = TRUE))`
+</pre>
+
+However, as you can see in this example, this technique using muting can be a little bit confusing when the foreground and the background are more or less equally represented - muting works less well in that case and color pairs can be harder to distinguish.
+
+---
+## Numerical similarity measures
+```{r, message=FALSE, echo=FALSE}
+require("RecordLinkage", quietly = TRUE) 
+```
+The Levenshtein-distance (the "edit distance" measuring least number of edit operations necessary to go from one string to another) is `r levenshteinDist(primo, secundo)`. 
+For symbols in the third position only, the same measure is `r levenshteinDist(primo_3k, secundo_3k)`.
+The measure for remaining symbols (ie in non-3rd-positions) is `r levenshteinDist(primo_12k, secundo_12k)`.
+
+### Similarity measure
+
+The Levenshtein similarity measure can be calculated and is defined on the interval [0,1] where 0 indicates the highest level of dissimilarity and consequently **1 denotes highest possible similarity** between two strings of symbols.
+
+For symbols in the 3rd position, we get the measure `r levenshteinSim(primo_3k, secundo_3k)`. 
+For symbols in other positions, we get a significantly higher similarity mesaure: `r levenshteinSim(primo_12k, secundo_12k)`
+
