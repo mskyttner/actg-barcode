@@ -19,8 +19,8 @@ European Roller | Eurasian Woodcock
 ![alt text][id1] | ![alt text][id2]  
 **This European Roller flew astray, it is from Ramsberg, north of Lindesberg.** | **This Eurasian Woodcock originates from the Fiby lake outside Uppsala.**
 
-[id1]: ../blue-bird-small.png "Reference sample of European Roller"
-[id2]: ../brown-bird-small.png "Reference sample of European Woodcock"
+[id1]: blue-bird-small.png "Reference sample of European Roller"
+[id2]: brown-bird-small.png "Reference sample of European Woodcock"
 
 ---
 
