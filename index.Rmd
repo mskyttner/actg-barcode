@@ -11,7 +11,7 @@ mode        : selfcontained # {standalone, draft}
 ---
 
 ## Reference samples  
-Samples kept at the Swedish Museum for Natural History of the [European Roller](http://naturarv.se/?param=dnakey&catalogNumber=20106015) using Cat. id. NRM 20106015 - depicted in the figure to the left - and the [Eurasian Woodcock] (http://naturarv.se/?param=dnakey&catalogNumber=20046331) using Cat. id. NRM  20046331 - the figure to the right - from which some DNA data has been sequenced. 
+Samples kept at the Swedish Museum for Natural History of the [European Roller](http://naturarv.se/?param=dnakey&catalogNumber=20106015) using Cat. id. NRM 20106015 - depicted in the figure to the left - and the [Eurasian Woodcock] (http://naturarv.se/?param=dnakey&catalogNumber=20046331) using Cat. id. NRM  20046331 - the figure to the right - from which some DNA data has been sequenced.   
 
 
 European Roller | Eurasian Woodcock  
